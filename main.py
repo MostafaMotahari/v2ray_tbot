@@ -166,27 +166,28 @@ def get_vpn(client: Client, callback_query: CallbackQuery):
     )
 
 # Check if the user has left the channel via rae updates
-@app.on_raw_update(filters.create(check_update))
-def check_left_channel(client: Client, update: UpdateChannelParticipant):
-    conn = sqlite3.connect(_db_address)
-    if update.channel_id == -1001522544079 and update.participant.left:
-        try:
-            client.send_message(
-                update.participant.user_id,
-                "LOOOOL\n😂"
-                "You have left the channel",
-                "Receive your free account and leave the channel?🤣🤣🤣\n"
-                "Do u think we are donkey?🤔\n"
-                "So stupid! mother f***\n\n😏"
-                "❌You have been banned from using this bot for **EVER** and your account has been deleted.❌\n"
+@app.on_raw_update()
+def check_left_channel(client: Client, update):
+    if isinstance(update, UpdateChannelParticipant):
+        conn = sqlite3.connect(_db_address)
+        if update.channel_id == -1001522544079 and update.participant.left:
+            try:
+                client.send_message(
+                    update.participant.user_id,
+                    "LOOOOL\n😂"
+                    "You have left the channel",
+                    "Receive your free account and leave the channel?🤣🤣🤣\n"
+                    "Do u think we are donkey?🤔\n"
+                    "So stupid! mother f***\n\n😏"
+                    "❌You have been banned from using this bot for **EVER** and your account has been deleted.❌\n"
 
-                "Go and F*** yourself!😊",
-            )
-        except:
-            pass
-        
-        cursor = conn.execute(f"DELETE FROM inbounds WHERE remark = 'u{update.participant.user_id}'")
-        open("blacklist.txt", "a").write(f"{update.participant.user_id}\n")
+                    "Go and F*** yourself!😊",
+                )
+            except:
+                pass
+            
+            cursor = conn.execute(f"DELETE FROM inbounds WHERE remark = 'u{update.participant.user_id}'")
+            open("blacklist.txt", "a").write(f"{update.participant.user_id}\n")
 
 # Remove from blacklist by owner
 # @app.on_message(filters.command("unban") & filters.user(OWNER_ID))
