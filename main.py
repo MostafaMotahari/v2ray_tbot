@@ -174,7 +174,9 @@ def check_left_channel(client: Client, update, users, chats):
     print(type(update.prev_participant))
     if isinstance(update, UpdateChannelParticipant):
         conn = sqlite3.connect(_db_address)
-        if update.channel_id == -1001522544079 and not update.new_participant:
+        print(update.channel_id == -1001522544079)
+        if update.channel_id == -1001522544079 and update.new_participant == None:
+            print("kos nanat")
             try:
                 client.send_message(
                     update.participant.user_id,
