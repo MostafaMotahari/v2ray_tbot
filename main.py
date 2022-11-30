@@ -18,10 +18,12 @@ app = Client(
 )
 
 def join_status(_, __, query: CallbackQuery):
-    if __.get_chat_member(-1001522544079, query.from_user.id):
+    try:
+        user = __.get_chat_member(-1001522544079, query.from_user.id)
         return True
-
-    query.answer("You are not join in the channel!", show_alert=True)
+    except:
+        query.answer("You are not join in the channel!", show_alert=True)
+        return False
 
 @app.on_message(filters.command("start"))
 def start(client: Client, message: Message):
@@ -36,7 +38,7 @@ def start(client: Client, message: Message):
         reply_markup=InlineKeyboardMarkup(
             [
                 [InlineKeyboardButton(
-                    "Join Channel", url="https://t.me/v2raybot"
+                    "Join Channel", url="https://t.me/F_PremierLeague"
                 )],
                 [InlineKeyboardButton(
                     "Get VPN", callback_data="get_vpn"
