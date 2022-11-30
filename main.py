@@ -169,17 +169,13 @@ def get_vpn(client: Client, callback_query: CallbackQuery):
 # Check if the user has left the channel via rae updates
 @app.on_raw_update()
 def check_left_channel(client: Client, update, users, chats):
-    print(isinstance(update.new_participant, ChannelParticipantLeft))
-    print(type(update.new_participant))
-    print(type(update.prev_participant))
     if isinstance(update, UpdateChannelParticipant):
         conn = sqlite3.connect(_db_address)
         print(update.channel_id == -1001522544079)
         if update.channel_id == 1522544079 and update.new_participant == None:
-            print("kos nanat")
             try:
                 client.send_message(
-                    update.participant.user_id,
+                    update.user_id,
                     "LOOOOL\n😂"
                     "You have left the channel",
                     "Receive your free account and leave the channel?🤣🤣🤣\n"
@@ -192,8 +188,8 @@ def check_left_channel(client: Client, update, users, chats):
             except:
                 pass
             
-            cursor = conn.execute(f"DELETE FROM inbounds WHERE remark = 'u{update.participant.user_id}'")
-            open("blacklist.txt", "a").write(f"{update.participant.user_id}\n")
+            cursor = conn.execute(f"DELETE FROM inbounds WHERE remark = 'u{update.user_id}'")
+            open("blacklist.txt", "a").write(f"{update.user_id}\n")
 
 # Remove from blacklist by owner
 # @app.on_message(filters.command("unban") & filters.user(OWNER_ID))
