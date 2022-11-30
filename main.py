@@ -177,7 +177,7 @@ def check_left_channel(client: Client, update, users, chats):
                     update.user_id,
                     "LOOOOL😂\n"
                     "You have left the channel"
-                    "Receive your free account and leave the channel?🤣🤣🤣\n"
+                    "Receive your free account and leave the channel?\n"
                     "Do u think we are donkey?🤔\n"
                     "So stupid! mother f***\n\n😏"
                     "❌You have been banned from using this bot for **EVER** and your account has been deleted.❌\n"
