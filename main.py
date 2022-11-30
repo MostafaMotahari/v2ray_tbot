@@ -73,7 +73,7 @@ def start(client: Client, message: Message):
         )
     )
 
-@app.on_callback_query(filters.regex("get_vpn") & filters.create(join_status) & filters.create(blacklist))
+@app.on_callback_query(filters.regex("get_vpn") & filters.create(join_status) & filters.create(blacklist) & filters.create(check_account))
 def get_vpn(client: Client, callback_query: CallbackQuery):
     callback_query.answer("Please wait...")
     conn = sqlite3.connect(_db_address)
