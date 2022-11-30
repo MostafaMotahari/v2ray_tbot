@@ -168,7 +168,7 @@ def get_vpn(client: Client, callback_query: CallbackQuery):
 # Check if the user has left the channel via rae updates
 @app.on_raw_update()
 def check_left_channel(client: Client, update, users, chats):
-    print("kosmadaret")
+    print(type(update))
     if isinstance(update, UpdateChannelParticipant):
         conn = sqlite3.connect(_db_address)
         if update.channel_id == -1001522544079 and update.participant.left:
