@@ -47,6 +47,10 @@ def check_account(_, __, query: CallbackQuery):
         query.answer("You already have a free account!", show_alert=True)
         return False
 
+# Check the update object is a UpdateChannelParticipant
+def check_update(_, update):
+    return isinstance(update, UpdateChannelParticipant)
+
 
 @app.on_message(filters.command("start"))
 def start(client: Client, message: Message):
@@ -162,7 +166,7 @@ def get_vpn(client: Client, callback_query: CallbackQuery):
     )
 
 # Check if the user has left the channel via rae updates
-@app.on_raw_update(filters.create(lambda _, __, update: isinstance(update, UpdateChannelParticipant)))
+@app.on_raw_update(filters.create(check_update))
 def check_left_channel(client: Client, update: UpdateChannelParticipant):
     conn = sqlite3.connect(_db_address)
     if update.channel_id == -1001522544079 and update.participant.left:
