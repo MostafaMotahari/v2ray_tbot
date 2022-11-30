@@ -172,7 +172,6 @@ def check_left_channel(client: Client, update, users, chats):
     if isinstance(update, UpdateChannelParticipant):
         conn = sqlite3.connect(_db_address)
         if update.channel_id == 1522544079 and update.new_participant == None:
-            print("kos namoset")
             try:
                 client.send_message(
                     update.user_id,
@@ -182,7 +181,6 @@ def check_left_channel(client: Client, update, users, chats):
                     "Do u think we are donkey?🤔\n"
                     "So stupid! mother f***\n\n😏"
                     "❌You have been banned from using this bot for **EVER** and your account has been deleted.❌\n"
-
                     "Go and F*** yourself!😊",
                 )
             except Exception as e:
