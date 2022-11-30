@@ -106,7 +106,7 @@ def get_vpn(client: Client, callback_query: CallbackQuery):
 
     callback_query.edit_message_text(
         "Your account is ready, please scan the QR code below to get your account."
-        "If you can't scan the QR code, please copy the link below and paste it to your v2ray client."
+        "If you can't scan the QR code, please copy the link below and paste it to your v2ray client.\n\n" + v2ray_qrcode,
     )
 
     client.send_message(
