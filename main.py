@@ -18,7 +18,7 @@ app = Client(
 )
 
 def join_status(_, __, query: CallbackQuery):
-    if __.get_chat_member(query.from_user.id, -1001522544079):
+    if __.get_chat_member(-1001522544079, query.from_user.id):
         return True
 
     query.answer("You are not join in the channel!", show_alert=True)
@@ -26,12 +26,12 @@ def join_status(_, __, query: CallbackQuery):
 @app.on_message(filters.command("start"))
 def start(client: Client, message: Message):
     message.reply_text(
-        "Hello dear!😁"
-        "I'm Fantasy Premier League Bot, I can give you a free and fast v2ray account."
-        "Just click below button to get your account."
+        "Hello dear!😁\n"
+        "I'm Fantasy Premier League Bot, I can give you a free and fast v2ray account.\n"
+        "Just click below button to get your account.\n"
         "If you have any questions, please contact @v2raybot.\n\n"
-        "⭕️Note that for getting a new account, **you must join our channel** first."
-        "If you have already joined, please click the button below to get your account."
+        "⭕️Note that for getting a new account, **you must join our channel** first.\n"
+        "If you have already joined, please click the button below to get your account.\n"
         "If you have not joined, please join our channel first using Join button, then click the Get VPN button to get your account.",
         reply_markup=InlineKeyboardMarkup(
             [
