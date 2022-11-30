@@ -17,14 +17,20 @@ app = Client(
     bot_token=config('BOT_TOKEN'),
 )
 
+def join_status(_, __, query: CallbackQuery):
+    if __.get_chat_member(query.from_user.id, -1001522544079):
+        return True
+
+    query.answer("You are not join in the channel!", show_alert=True)
+
 @app.on_message(filters.command("start"))
 def start(client: Client, message: Message):
     message.reply_text(
-        "Hello dear!"
+        "Hello dear!😁"
         "I'm Fantasy Premier League Bot, I can give you a free and fast v2ray account."
         "Just click below button to get your account."
         "If you have any questions, please contact @v2raybot.\n\n"
-        "Note that for getting a new account, you must join our channel first."
+        "⭕️Note that for getting a new account, **you must join our channel** first."
         "If you have already joined, please click the button below to get your account."
         "If you have not joined, please join our channel first using Join button, then click the Get VPN button to get your account.",
         reply_markup=InlineKeyboardMarkup(
@@ -39,7 +45,7 @@ def start(client: Client, message: Message):
         )
     )
 
-@app.on_callback_query(filters.regex("get_vpn"))
+@app.on_callback_query(filters.regex("get_vpn") & filters.create(join_status))
 def get_vpn(client: Client, callback_query: CallbackQuery):
     callback_query.answer("Please wait...")
     conn = sqlite3.connect(_db_address)
@@ -105,13 +111,26 @@ def get_vpn(client: Client, callback_query: CallbackQuery):
     v2ray_qrcode = f"`vless://{rand_uuid}@{_tls_domain}:{port_number}?type=ws&security=tls&path=%2F&sni={_tls_domain}#u{callback_query.from_user.id}`"
 
     callback_query.edit_message_text(
+        "Congratulations!🥳"
         "Your account is ready, please scan the QR code below to get your account."
-        "If you can't scan the QR code, please copy the link below and paste it to your v2ray client.\n\n" + v2ray_qrcode,
+        "If you can't scan the QR code, please **copy the link below and paste it to your v2ray client**.👇🏻",
     )
 
     client.send_message(
         callback_query.from_user.id,
         v2ray_qrcode,
+    )
+
+    client.send_message(
+        callback_query.from_user.id,
+        "⁉️If you have any questions, please describe your problem in detail and group.",
+        reply_markup=InlineKeyboardMarkup(
+            [
+                [InlineKeyboardButton(
+                    "Group", url="https://t.me/+6QxSYV_Oh9FlYmI0"
+                )],
+            ]
+        )
     )
 
 app.run()
