@@ -36,6 +36,17 @@ def blacklist(_, __, query: CallbackQuery):
     else:
         return True
 
+# Check if user got a free account
+def check_account(_, __, query: CallbackQuery):
+    conn = sqlite3.connect(_db_address)
+    c = conn.cursor()
+    c.execute("SELECT * FROM inbounds WHERE remark = ?", (f"u{query.from_user.id}",))
+    if c.fetchone() is None:
+        return True
+    else:
+        query.answer("You already have a free account!", show_alert=True)
+        return False
+
 
 @app.on_message(filters.command("start"))
 def start(client: Client, message: Message):
