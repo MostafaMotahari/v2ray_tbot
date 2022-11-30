@@ -1,19 +1,19 @@
-import curses
-from email import message
 from pyrogram.client import Client
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 from pyrogram import filters
-import requests
+from decouple import config
 import sqlite3
+import uuid
 
 _db_address = '/etc/x-ui-english/x-ui-english.db'
-_tls_domain = 'example.com'
+_tls_domain = 'sila.ml'
 _tls_port = 443
 
 app = Client(
     "my_account",
-    api_id=123456,
-    api_hash="0123456789abcdef0123456789abcdef"   
+    api_id=config('API_ID'),
+    api_hash=config('API_HASH'),
+    bot_token=config('BOT_TOKEN'),
 )
 
 @app.on_message(filters.command("start"))
@@ -42,6 +42,23 @@ def start(client: Client, message: Message):
 def get_vpn(client: Client, callback_query: CallbackQuery):
     callback_query.answer("Please wait...")
     conn = sqlite3.connect(_db_address)
+
+    rand_uuid = str(uuid.uuid4())
+
+    settings = """{
+        "clients": [
+            {
+            "id": """ + rand_uuid + """,
+            "alterId": 0,
+            "email": "",
+            "limitIp": 0,
+            "totalGB": 0,
+            "expiryTime": ""
+            }
+        ],
+        "disableInsecureEncryption": false
+    }"""
+
     stream_settings = """{
         "network": "ws",
         "security": "tls",
@@ -61,23 +78,26 @@ def get_vpn(client: Client, callback_query: CallbackQuery):
             "headers": {}
         }
     }"""
+
+    siniffing = """{
+        "enabled": true,
+        "destOverride": [
+            "http",
+            "tls"
+        ]
+    }"""
     
-    cursor = conn.execute(f"insert into inbounds (remark, port, protocol, stream_settings) values ('u{callback_query.from_user.id}', 25000, 'vless', '{stream_settings}') returning settings")
+    cursor = conn.execute(f"INSERT INTO inbounds (user_id, up, down, total, remark, enable, expiry_time, listen, port, protocol, settings, stream_settings, tag, sniffing ) VALUES (1, 0, 0, 0, 'u{callback_query.from_user.id}', 1, 0, '', 25000, 'v2ray', {settings}, {stream_settings}, 'inbound-{callback_query.from_user.id}', {siniffing})")
+
     conn.commit()
-    client_settings = cursor.execute(f"select settings from inbounds where remark = 'u{callback_query.from_user.id}'")
-    v2ray_qrcode = f"vless://{client_settings}@{_tls_domain}:{_tls_port}?type=ws&security=tls&path=%2F&sni={_tls_domain}#u{callback_query.from_user.id}"
+    conn.close()
+
+    v2ray_qrcode = f"vless://{rand_uuid}@{_tls_domain}:{_tls_port}?type=ws&security=tls&path=%2F&sni={_tls_domain}#u{callback_query.from_user.id}"
 
     callback_query.edit_message_text(
         "Your account is ready, please scan the QR code below to get your account."
         "If you can't scan the QR code, please copy the link below and paste it to your v2ray client."
-        "```{}```".format(v2ray_qrcode),
-        reply_markup=InlineKeyboardMarkup(
-            [
-                [InlineKeyboardButton(
-                    "Get QR Code", url=f"https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={v2ray_qrcode}" 
-                )],
-            ]
-        )
+        "```code : {}```".format(v2ray_qrcode),
     )
 
 app.run()
