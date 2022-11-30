@@ -64,8 +64,8 @@ def get_vpn(client: Client, callback_query: CallbackQuery):
     
     cursor = conn.execute(f"insert into inbounds (remark, port, protocol, stream_settings) values ('u{callback_query.from_user.id}', 25000, 'vless', '{stream_settings}') returning settings")
     conn.commit()
-    client_id = cursor.fetchone()[0]
-    v2ray_qrcode = f"vless://{client_id}@{_tls_domain}:{_tls_port}?type=ws&security=tls&path=%2F&sni={_tls_domain}#u{callback_query.from_user.id}"
+    client_settings = cursor.execute(f"select settings from inbounds where remark = 'u{callback_query.from_user.id}'")
+    v2ray_qrcode = f"vless://{client_settings}@{_tls_domain}:{_tls_port}?type=ws&security=tls&path=%2F&sni={_tls_domain}#u{callback_query.from_user.id}"
 
     callback_query.edit_message_text(
         "Your account is ready, please scan the QR code below to get your account."
