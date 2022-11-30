@@ -33,6 +33,9 @@ def blacklist(_, __, query: CallbackQuery):
             query.answer("You are blacklisted!", show_alert=True)
             return False
 
+    else:
+        return True
+
 
 @app.on_message(filters.command("start"))
 def start(client: Client, message: Message):
@@ -170,5 +173,16 @@ def check_left_channel(client: Client, update: UpdateChannelParticipant):
         cursor = conn.execute(f"DELETE FROM inbounds WHERE remark = 'u{update.participant.user_id}'")
         open("blacklist.txt", "a").write(f"{update.participant.user_id}\n")
 
+# Remove from blacklist by owner
+# @app.on_message(filters.command("unban") & filters.user(OWNER_ID))
+# def unban(client: Client, message: Message):
+#     if not message.reply_to_message:
+#         message.reply_text("Reply to the user's message to unban him.")
+#         return
+
+#     if message.reply_to_message.from_user.id in open("blacklist.txt").read().splitlines():
+#         open("blacklist.txt", "w").write(
+#             open("blacklist.txt").read().replace(f"{message.reply_to_message.from_user.id}"),
+#         )
 
 app.run()
