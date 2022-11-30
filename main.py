@@ -2,6 +2,7 @@ from random import random
 from pyrogram.client import Client
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 from pyrogram.raw.types.update_channel_participant import UpdateChannelParticipant
+from pyrogram.raw.types.channel_participant_left import ChannelParticipantLeft
 from pyrogram import filters
 from decouple import config
 import sqlite3
@@ -168,10 +169,11 @@ def get_vpn(client: Client, callback_query: CallbackQuery):
 # Check if the user has left the channel via rae updates
 @app.on_raw_update()
 def check_left_channel(client: Client, update, users, chats):
-    print(isinstance(update, UpdateChannelParticipant))
+    print(update.participant.left)
+    print(isinstance(update.new_participant, ChannelParticipantLeft))
     if isinstance(update, UpdateChannelParticipant):
         conn = sqlite3.connect(_db_address)
-        if update.channel_id == -1001522544079 and update.participant.left:
+        if update.channel_id == -1001522544079 and isinstance(update.new_participant, ChannelParticipantLeft):
             try:
                 client.send_message(
                     update.participant.user_id,
