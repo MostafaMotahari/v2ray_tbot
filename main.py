@@ -87,7 +87,7 @@ def get_vpn(client: Client, callback_query: CallbackQuery):
         ]
     }"""
     
-    cursor = conn.execute(f"INSERT INTO inbounds (user_id, up, down, total, remark, enable, expiry_time, listen, port, protocol, settings, stream_settings, tag, sniffing ) VALUES (?,?,?,?,,?,?,?,?,?,?,?,?,?,?)", (1, 0, 0, 0, f'u{callback_query.from_user.id}', 1, 0, '', 25006, 'v2ray', settings, stream_settings, f'inbound-{callback_query.from_user.id}', siniffing))
+    cursor = conn.execute(f"INSERT INTO inbounds (user_id, up, down, total, remark, enable, expiry_time, listen, port, protocol, settings, stream_settings, tag, sniffing ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (1, 0, 0, 0, f'u{callback_query.from_user.id}', 1, 0, '', 25006, 'v2ray', settings, stream_settings, f'inbound-{callback_query.from_user.id}', siniffing))
 
     conn.commit()
     conn.close()
