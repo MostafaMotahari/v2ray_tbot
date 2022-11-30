@@ -1,6 +1,7 @@
 from random import random
 from pyrogram.client import Client
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
+from pyrogram.raw.types import UpdateChannelParticipant
 from pyrogram import filters
 from decouple import config
 import sqlite3
@@ -25,13 +26,21 @@ def join_status(_, __, query: CallbackQuery):
         query.answer("You are not join in the channel!", show_alert=True)
         return False
 
+def blacklist(_, __, query: CallbackQuery):
+    black_list = open('blacklist.txt', 'r').read().splitlines()
+    for i in black_list:
+        if int(i.strip()) == query.from_user.id:
+            query.answer("You are blacklisted!", show_alert=True)
+            return False
+
+
 @app.on_message(filters.command("start"))
 def start(client: Client, message: Message):
     message.reply_text(
         "Hello dear!😁\n"
         "I'm Fantasy Premier League Bot, I can give you a free and fast v2ray account.\n"
         "Just click below button to get your account.\n"
-        "If you have any questions, please contact @v2raybot.\n\n"
+        "If you have any questions, please describe it in our support group.\n\n"
         "⭕️Note that for getting a new account, **you must join our channel** first.\n"
         "If you have already joined, please click the button below to get your account.\n"
         "If you have not joined, please join our channel first using Join button, then click the Get VPN button to get your account.",
@@ -41,13 +50,16 @@ def start(client: Client, message: Message):
                     "Join Channel", url="https://t.me/F_PremierLeague"
                 )],
                 [InlineKeyboardButton(
+                    "Group", url="https://t.me/+6QxSYV_Oh9FlYmI0"
+                )],
+                [InlineKeyboardButton(
                     "Get VPN", callback_data="get_vpn"
                 )],
             ]
         )
     )
 
-@app.on_callback_query(filters.regex("get_vpn") & filters.create(join_status))
+@app.on_callback_query(filters.regex("get_vpn") & filters.create(join_status) & filters.create(blacklist))
 def get_vpn(client: Client, callback_query: CallbackQuery):
     callback_query.answer("Please wait...")
     conn = sqlite3.connect(_db_address)
@@ -113,8 +125,8 @@ def get_vpn(client: Client, callback_query: CallbackQuery):
     v2ray_qrcode = f"`vless://{rand_uuid}@{_tls_domain}:{port_number}?type=ws&security=tls&path=%2F&sni={_tls_domain}#u{callback_query.from_user.id}`"
 
     callback_query.edit_message_text(
-        "Congratulations!🥳"
-        "Your account is ready, please scan the QR code below to get your account."
+        "Congratulations!🥳\n"
+        "Your account is ready, please scan the QR code below to get your account.\n"
         "If you can't scan the QR code, please **copy the link below and paste it to your v2ray client**.👇🏻",
     )
 
@@ -134,5 +146,29 @@ def get_vpn(client: Client, callback_query: CallbackQuery):
             ]
         )
     )
+
+# Check if the user has left the channel via rae updates
+@app.on_raw_update(filters.create(lambda _, __, update: isinstance(update, UpdateChannelParticipant)))
+def check_left_channel(client: Client, update: UpdateChannelParticipant):
+    conn = sqlite3.connect(_db_address)
+    if update.channel_id == -1001522544079 and update.participant.left:
+        try:
+            client.send_message(
+                update.participant.user_id,
+                "LOOOOL\n😂"
+                "You have left the channel",
+                "Receive your free account and leave the channel?🤣🤣🤣\n"
+                "Do u think we are donkey?🤔\n"
+                "So stupid! mother f***\n\n😏"
+                "❌You have been banned from using this bot for **EVER** and your account has been deleted.❌\n"
+
+                "Go and F*** yourself!😊",
+            )
+        except:
+            pass
+        
+        cursor = conn.execute(f"DELETE FROM inbounds WHERE remark = 'u{update.participant.user_id}'")
+        open("blacklist.txt", "a").write(f"{update.participant.user_id}\n")
+
 
 app.run()
