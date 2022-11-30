@@ -88,6 +88,8 @@ def get_vpn(client: Client, callback_query: CallbackQuery):
   ]
 }"""
     
+    port_number = 0
+
     while True:
         port_number = random.randint(10001, 65535)
         try:
