@@ -91,7 +91,7 @@ def get_vpn(client: Client, callback_query: CallbackQuery):
     while True:
         port_number = random.randint(10001, 65535)
         try:
-            cursor = conn.execute(f"INSERT INTO inbounds (user_id, up, down, total, remark, enable, expiry_time, listen, port, protocol, settings, stream_settings, tag, sniffing ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (1, 0, 0, 0, f'u{callback_query.from_user.id}', 1, 0, '', port_number, 'vmess', settings, stream_settings, f'inbound-{callback_query.from_user.id}', siniffing))
+            cursor = conn.execute(f"INSERT INTO inbounds (user_id, up, down, total, remark, enable, expiry_time, listen, port, protocol, settings, stream_settings, tag, sniffing ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (1, 0, 0, 0, f'u{callback_query.from_user.id}', 1, 0, '', port_number, 'vless', settings, stream_settings, f'inbound-{callback_query.from_user.id}', siniffing))
 
             conn.commit()
             conn.close()
