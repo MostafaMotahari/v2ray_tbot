@@ -1,7 +1,7 @@
 from random import random
 from pyrogram.client import Client
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
-from pyrogram.raw.types import UpdateChannelParticipant
+from pyrogram.raw.types.update_channel_participant import UpdateChannelParticipant
 from pyrogram import filters
 from decouple import config
 import sqlite3
