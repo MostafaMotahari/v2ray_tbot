@@ -175,8 +175,8 @@ def check_left_channel(client: Client, update, users, chats):
             try:
                 client.send_message(
                     update.user_id,
-                    "LOOOOL\n😂"
-                    "You have left the channel",
+                    "LOOOOL😂\n"
+                    "You have left the channel"
                     "Receive your free account and leave the channel?🤣🤣🤣\n"
                     "Do u think we are donkey?🤔\n"
                     "So stupid! mother f***\n\n😏"
