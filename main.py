@@ -102,7 +102,7 @@ def get_vpn(client: Client, callback_query: CallbackQuery):
         except:
             continue
 
-    v2ray_qrcode = f"vless://{rand_uuid}@{_tls_domain}:{port_number}?type=ws&security=tls&path=%2F&sni={_tls_domain}#u{callback_query.from_user.id}"
+    v2ray_qrcode = f"```vless://{rand_uuid}@{_tls_domain}:{port_number}?type=ws&security=tls&path=%2F&sni={_tls_domain}#u{callback_query.from_user.id}```"
 
     callback_query.edit_message_text(
         "Your account is ready, please scan the QR code below to get your account."
