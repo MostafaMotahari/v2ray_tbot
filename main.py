@@ -1,13 +1,14 @@
+from random import random
 from pyrogram.client import Client
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 from pyrogram import filters
 from decouple import config
 import sqlite3
 import uuid
+import random
 
 _db_address = '/etc/x-ui-english/x-ui-english.db'
-_tls_domain = 'sila.ml'
-_tls_port = 443
+_tls_domain = 'v2ray.mousiolvpn.tk'
 
 app = Client(
     "my_account",
@@ -66,8 +67,8 @@ def get_vpn(client: Client, callback_query: CallbackQuery):
       "serverName": "''' + _tls_domain + '''",
       "certificates": [
       {
-          "certificateFile": "/ets/lsdfhsdlkjfksldf/dsfdf",
-          "keyFile": "/sdfds/lsdkfj/dfsd"
+          "certificateFile": "/etc/letsencrypt/live/v2ray.mousiolvpn.tk/fullchain.pem",
+          "keyFile": "/etc/letsencrypt/live/v2ray.mousiolvpn.tk/privkey.pem"
       }
       ],
       "alpn": []
@@ -87,17 +88,28 @@ def get_vpn(client: Client, callback_query: CallbackQuery):
   ]
 }"""
     
-    cursor = conn.execute(f"INSERT INTO inbounds (user_id, up, down, total, remark, enable, expiry_time, listen, port, protocol, settings, stream_settings, tag, sniffing ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (1, 0, 0, 0, f'u{callback_query.from_user.id}', 1, 0, '', 25007, 'vmess', settings, stream_settings, f'inbound-{callback_query.from_user.id}', siniffing))
+    while True:
+        port_number = random.randint(10001, 65535)
+        try:
+            cursor = conn.execute(f"INSERT INTO inbounds (user_id, up, down, total, remark, enable, expiry_time, listen, port, protocol, settings, stream_settings, tag, sniffing ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (1, 0, 0, 0, f'u{callback_query.from_user.id}', 1, 0, '', port_number, 'vmess', settings, stream_settings, f'inbound-{callback_query.from_user.id}', siniffing))
 
-    conn.commit()
-    conn.close()
+            conn.commit()
+            conn.close()
+            break
 
-    v2ray_qrcode = f"vless://{rand_uuid}@{_tls_domain}:{_tls_port}?type=ws&security=tls&path=%2F&sni={_tls_domain}#u{callback_query.from_user.id}"
+        except:
+            continue
+
+    v2ray_qrcode = f"vless://{rand_uuid}@{_tls_domain}:{port_number}?type=ws&security=tls&path=%2F&sni={_tls_domain}#u{callback_query.from_user.id}"
 
     callback_query.edit_message_text(
         "Your account is ready, please scan the QR code below to get your account."
-        "If you can't scan the QR code, please copy the link below and paste it to your v2ray client.\n\n" + v2ray_qrcode
-        ,
+        "If you can't scan the QR code, please copy the link below and paste it to your v2ray client."
+    )
+
+    client.send_message(
+        callback_query.from_user.id,
+        "```" + v2ray_qrcode + "```",
     )
 
 app.run()
