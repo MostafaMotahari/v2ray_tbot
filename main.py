@@ -45,46 +45,46 @@ def get_vpn(client: Client, callback_query: CallbackQuery):
 
     rand_uuid = str(uuid.uuid4())
 
-    settings = """{
-        "clients": [
-            {
-            "id": """ + rand_uuid + """,
-            "alterId": 0,
-            "email": "",
-            "limitIp": 0,
-            "totalGB": 0,
-            "expiryTime": ""
-            }
-        ],
-        "disableInsecureEncryption": false
-    }"""
+    settings = '''{
+      "clients": [
+          {
+          "id": "''' + rand_uuid + '''",
+          "alterId": 0,
+          "email": "",
+          "limitIp": 0,
+          "totalGB": 0,
+          "expiryTime": ""
+          }
+      ],
+      "disableInsecureEncryption": false
+    }'''
 
-    stream_settings = """{
-        "network": "ws",
-        "security": "tls",
-        "tlsSettings": {
-            "serverName": """ + _tls_domain + """,
-            "certificates": [
-            {
-                "certificateFile": "/ets/lsdfhsdlkjfksldf/dsfdf",
-                "keyFile": "/sdfds/lsdkfj/dfsd"
-            }
-            ],
-            "alpn": []
-        },
-        "wsSettings": {
-            "acceptProxyProtocol": false,
-            "path": "/",
-            "headers": {}
-        }
-    }"""
+    stream_settings = '''{
+      "network": "ws",
+      "security": "tls",
+      "tlsSettings": {
+          "serverName": "''' + _tls_domain + '''",
+          "certificates": [
+          {
+              "certificateFile": "/ets/lsdfhsdlkjfksldf/dsfdf",
+              "keyFile": "/sdfds/lsdkfj/dfsd"
+          }
+          ],
+          "alpn": []
+      },
+      "wsSettings": {
+          "acceptProxyProtocol": false,
+          "path": "/",
+          "headers": {}
+      }
+    }'''
 
     siniffing = """{
-        "enabled": true,
-        "destOverride": [
-            "http",
-            "tls"
-        ]
+      "enabled": true,
+      "destOverride": [
+          "http",
+          "tls"
+      ]
     }"""
     
     cursor = conn.execute(f"INSERT INTO inbounds (user_id, up, down, total, remark, enable, expiry_time, listen, port, protocol, settings, stream_settings, tag, sniffing ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (1, 0, 0, 0, f'u{callback_query.from_user.id}', 1, 0, '', 25006, 'v2ray', settings, stream_settings, f'inbound-{callback_query.from_user.id}', siniffing))
