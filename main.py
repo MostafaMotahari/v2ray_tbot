@@ -170,6 +170,8 @@ def get_vpn(client: Client, callback_query: CallbackQuery):
 @app.on_raw_update()
 def check_left_channel(client: Client, update, users, chats):
     print(isinstance(update.new_participant, ChannelParticipantLeft))
+    print(type(update.new_participant))
+    print(type(update.prev_participant))
     if isinstance(update, UpdateChannelParticipant):
         conn = sqlite3.connect(_db_address)
         if update.channel_id == -1001522544079 and isinstance(update.new_participant, ChannelParticipantLeft):
