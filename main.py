@@ -171,8 +171,8 @@ def get_vpn(client: Client, callback_query: CallbackQuery):
 def check_left_channel(client: Client, update, users, chats):
     if isinstance(update, UpdateChannelParticipant):
         conn = sqlite3.connect(_db_address)
-        print(update.channel_id == -1001522544079)
         if update.channel_id == 1522544079 and update.new_participant == None:
+            print("kos namoset")
             try:
                 client.send_message(
                     update.user_id,
@@ -185,7 +185,8 @@ def check_left_channel(client: Client, update, users, chats):
 
                     "Go and F*** yourself!😊",
                 )
-            except:
+            except Exception as e:
+                print(e)
                 pass
             
             cursor = conn.execute(f"DELETE FROM inbounds WHERE remark = 'u{update.user_id}'")
