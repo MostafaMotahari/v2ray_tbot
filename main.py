@@ -69,9 +69,6 @@ def start(client: Client, message: Message):
                     "Join Channel", url="https://t.me/F_PremierLeague"
                 )],
                 [InlineKeyboardButton(
-                    "Group", url="https://t.me/+6QxSYV_Oh9FlYmI0"
-                )],
-                [InlineKeyboardButton(
                     "Get VPN", callback_data="get_vpn"
                 )],
             ]
@@ -81,67 +78,8 @@ def start(client: Client, message: Message):
 @app.on_callback_query(filters.regex("get_vpn") & filters.create(join_status) & filters.create(blacklist) & filters.create(check_account))
 def get_vpn(client: Client, callback_query: CallbackQuery):
     callback_query.answer("Please wait...")
-    conn = sqlite3.connect(_db_address)
 
-    rand_uuid = str(uuid.uuid4())
-
-    settings = '''{
-  "clients": [
-      {
-      "id": "''' + rand_uuid + '''",
-      "alterId": 0,
-      "email": "",
-      "limitIp": 0,
-      "totalGB": 0,
-      "expiryTime": ""
-      }
-  ],
-  "disableInsecureEncryption": false
-}'''
-
-    stream_settings = '''{
-  "network": "ws",
-  "security": "tls",
-  "tlsSettings": {
-      "serverName": "''' + _tls_domain + '''",
-      "certificates": [
-      {
-          "certificateFile": "/etc/letsencrypt/live/v2ray.mousiolvpn.tk/fullchain.pem",
-          "keyFile": "/etc/letsencrypt/live/v2ray.mousiolvpn.tk/privkey.pem"
-      }
-      ],
-      "alpn": []
-  },
-  "wsSettings": {
-      "acceptProxyProtocol": false,
-      "path": "/",
-      "headers": {}
-  }
-}'''
-
-    siniffing = """{
-  "enabled": true,
-  "destOverride": [
-      "http",
-      "tls"
-  ]
-}"""
-    
-    port_number = 0
-
-    while True:
-        port_number = random.randint(10001, 65535)
-        try:
-            cursor = conn.execute(f"INSERT INTO inbounds (user_id, up, down, total, remark, enable, expiry_time, listen, port, protocol, settings, stream_settings, tag, sniffing ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (1, 0, 0, 0, f'u{callback_query.from_user.id}', 1, 0, '', port_number, 'vless', settings, stream_settings, f'inbound-{callback_query.from_user.id}', siniffing))
-
-            conn.commit()
-            conn.close()
-            break
-
-        except:
-            continue
-
-    v2ray_qrcode = f"`vless://{rand_uuid}@{_tls_domain}:{port_number}?type=ws&security=tls&path=%2F&sni={_tls_domain}#u{callback_query.from_user.id}`"
+    v2ray_qrcode = "vmess://eyJhZGQiOiJzbmFwcGZvb2QuaXIiLCJhaWQiOiIwIiwiaG9zdCI6IndlYXJlamFkaS52cG5tYXN0ZXIudW5vIiwiaWQiOiI3MjRiY2I1Ny1lMjRmLTQxNGMtYjU2ZC1iZTEzMWVkN2Q5NDQiLCJuZXQiOiJ3cyIsInBhdGgiOiIvd3MiLCJwb3J0IjoiODAiLCJwcyI6IkBzYW5zb3JjaGlfYmV6YW5fZ2hleWNoaV9ib3QtTmVhbGE0MzMiLCJ0bHMiOiIiLCJzY3kiOiJhdXRvIiwidHlwZSI6Im5vbmUiLCJ2IjoiMiJ9"
 
     callback_query.edit_message_text(
         "Congratulations!🥳\n"
@@ -176,30 +114,15 @@ def check_left_channel(client: Client, update, users, chats):
                 client.send_message(
                     update.user_id,
                     "LOOOOL😂\n"
-                    "You have left the channel"
+                    "You have left the channel\n"
                     "Receive your free account and leave the channel?\n"
                     "Do u think we are donkey?🤔\n"
-                    "So stupid! mother f***\n\n😏"
+                    "So stupid! mother f!@#er\n\n😏"
                     "❌You have been banned from using this bot for **EVER** and your account has been deleted.❌\n"
-                    "Go and F*** yourself!😊",
+                    "Go and F!@#$ yourself!😊",
                 )
             except Exception as e:
                 print(e)
                 pass
-            
-            cursor = conn.execute(f"DELETE FROM inbounds WHERE remark = 'u{update.user_id}'")
-            open("blacklist.txt", "a").write(f"{update.user_id}\n")
-
-# Remove from blacklist by owner
-# @app.on_message(filters.command("unban") & filters.user(OWNER_ID))
-# def unban(client: Client, message: Message):
-#     if not message.reply_to_message:
-#         message.reply_text("Reply to the user's message to unban him.")
-#         return
-
-#     if message.reply_to_message.from_user.id in open("blacklist.txt").read().splitlines():
-#         open("blacklist.txt", "w").write(
-#             open("blacklist.txt").read().replace(f"{message.reply_to_message.from_user.id}"),
-#         )
 
 app.run()
