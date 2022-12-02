@@ -108,7 +108,6 @@ def get_vpn(client: Client, callback_query: CallbackQuery):
 @app.on_raw_update()
 def check_left_channel(client: Client, update, users, chats):
     if isinstance(update, UpdateChannelParticipant):
-        conn = sqlite3.connect(_db_address)
         if update.channel_id == 1522544079 and update.new_participant == None:
             try:
                 client.send_message(
