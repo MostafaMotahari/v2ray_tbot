@@ -79,7 +79,7 @@ def start(client: Client, message: Message):
 def get_vpn(client: Client, callback_query: CallbackQuery):
     callback_query.answer("Please wait...")
 
-    v2ray_qrcode = "vmess://eyJhZGQiOiJzbmFwcGZvb2QuaXIiLCJhaWQiOiIwIiwiaG9zdCI6IndlYXJlamFkaS52cG5tYXN0ZXIudW5vIiwiaWQiOiI3MjRiY2I1Ny1lMjRmLTQxNGMtYjU2ZC1iZTEzMWVkN2Q5NDQiLCJuZXQiOiJ3cyIsInBhdGgiOiIvd3MiLCJwb3J0IjoiODAiLCJwcyI6IkBzYW5zb3JjaGlfYmV6YW5fZ2hleWNoaV9ib3QtTmVhbGE0MzMiLCJ0bHMiOiIiLCJzY3kiOiJhdXRvIiwidHlwZSI6Im5vbmUiLCJ2IjoiMiJ9"
+    v2ray_qrcode = "`vmess://eyJhZGQiOiJzbmFwcGZvb2QuaXIiLCJhaWQiOiIwIiwiaG9zdCI6IndlYXJlamFkaS52cG5tYXN0ZXIudW5vIiwiaWQiOiI3MjRiY2I1Ny1lMjRmLTQxNGMtYjU2ZC1iZTEzMWVkN2Q5NDQiLCJuZXQiOiJ3cyIsInBhdGgiOiIvd3MiLCJwb3J0IjoiODAiLCJwcyI6IkBzYW5zb3JjaGlfYmV6YW5fZ2hleWNoaV9ib3QtTmVhbGE0MzMiLCJ0bHMiOiIiLCJzY3kiOiJhdXRvIiwidHlwZSI6Im5vbmUiLCJ2IjoiMiJ9`"
 
     callback_query.edit_message_text(
         "Congratulations!🥳\n"
