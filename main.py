@@ -79,7 +79,9 @@ def start(client: Client, message: Message):
 def get_vpn(client: Client, callback_query: CallbackQuery):
     callback_query.answer("Please wait...")
 
-    v2ray_qrcode = "`vmess://eyJhZGQiOiJzbmFwcGZvb2QuaXIiLCJhaWQiOiIwIiwiaG9zdCI6IndlYXJlamFkaS52cG5tYXN0ZXIudW5vIiwiaWQiOiI3MjRiY2I1Ny1lMjRmLTQxNGMtYjU2ZC1iZTEzMWVkN2Q5NDQiLCJuZXQiOiJ3cyIsInBhdGgiOiIvd3MiLCJwb3J0IjoiODAiLCJwcyI6IkBzYW5zb3JjaGlfYmV6YW5fZ2hleWNoaV9ib3QtTmVhbGE0MzMiLCJ0bHMiOiIiLCJzY3kiOiJhdXRvIiwidHlwZSI6Im5vbmUiLCJ2IjoiMiJ9`"
+    v2ray_qrcodes = open('v2ray_qrcodes.txt', 'r').read().splitlines()
+    v2ray_qrcode_one = v2ray_qrcode_one = random.choice(v2ray_qrcodes).strip()
+    v2ray_qrcode_two = v2ray_qrcode_two = random.choice(v2ray_qrcodes).strip()
 
     callback_query.edit_message_text(
         "Congratulations!🥳\n"
@@ -89,7 +91,8 @@ def get_vpn(client: Client, callback_query: CallbackQuery):
 
     client.send_message(
         callback_query.from_user.id,
-        v2ray_qrcode,
+        "1️⃣ **First QR Code**\n",
+        "`" + v2ray_qrcode_one + "`\n\n2️⃣ **Second QR Code**\n" + "`" + v2ray_qrcode_two + "`",
     )
 
     client.send_message(
